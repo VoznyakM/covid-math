@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import requests
+import sys
 
 COUNTRY = "Ukraine"
 DAYS_OF_SIMULATION = 366
@@ -7,7 +9,7 @@ COEF_BASE = 0.35
 COEF_QUARANTINE = 0.135
 DAY_QUARANTINE = 74
 INCUBATION_PERIOD = 15
-
+COVID_API_URL = 'http://localhost:3000/stats/'
 np.random.seed(0)
 
 def get_coef(day):
@@ -40,7 +42,18 @@ if __name__ == "__main__":
         new_cases_total_lst.append(sum(new_cases_lst))
 
         print(day, infected.size)
+        
+        stats = {"date": "2020-08-01", "cases": infected.size, "deathes": "0", "recovered": "0" }
+        try:
+          resp = requests.post(COVID_API_URL, json=stats)
+          if resp.status_code != 201:
+            raise ApiError('POST ' + COVID_API_URL + ' {}'.format(resp.status_code))
+          print('Created stats. ID: {}'.format(resp.json()["id"]))
+        except:
+          print ('Cant connect to API server')
+          sys.exit()
 
+"""
     plt.figure(figsize=(16, 8))
 
     plt.subplot(311)
@@ -60,3 +73,4 @@ if __name__ == "__main__":
     plt.legend(["Infected"], loc='upper left')
 
     plt.show()
+"""
