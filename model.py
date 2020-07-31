@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import requests
 import sys
+from datetime import datetime, timedelta
 
 COUNTRY = "Ukraine"
 DAYS_OF_SIMULATION = 366
@@ -10,6 +11,8 @@ COEF_QUARANTINE = 0.135
 DAY_QUARANTINE = 74
 INCUBATION_PERIOD = 15
 COVID_API_URL = 'http://localhost:3000/stats/'
+START_DATE = datetime.now() # date(2019, 4, 13)
+
 np.random.seed(0)
 
 def get_coef(day):
@@ -17,6 +20,7 @@ def get_coef(day):
 
 if __name__ == "__main__":
     days = np.arange(1, DAYS_OF_SIMULATION)
+    date = START_DATE
 
     infected = np.random.randint(1, INCUBATION_PERIOD, 1)
 
@@ -28,7 +32,6 @@ if __name__ == "__main__":
         coef = get_coef(day)
 
         new_cases_idx = np.argwhere(infected == day).flatten()
-
         new_cases_count = new_cases_idx.size
 
         infected = np.delete(infected, new_cases_idx)
@@ -41,9 +44,17 @@ if __name__ == "__main__":
         new_cases_lst.append(new_cases_count)
         new_cases_total_lst.append(sum(new_cases_lst))
 
-        print(day, infected.size)
-        
-        stats = {"date": "2020-08-01", "cases": infected.size, "deathes": "0", "recovered": "0" }
+        # print(day, infected.size)
+
+        date = date + timedelta(days=1)
+        stats = {
+           "date":  datetime.strftime(date, "%Y-%m-%d"), 
+           "cases": infected.size, 
+           "deaths": round(np.random.poisson(coef, infected.size).sum() * 0.03), 
+           "recovered": round(np.random.poisson(coef, infected.size).sum() * 0.06)
+        }
+#        print (stats)
+
         try:
           resp = requests.post(COVID_API_URL, json=stats)
           if resp.status_code != 201:
