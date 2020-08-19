@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import requests
 import sys
 from datetime import datetime, timedelta
@@ -11,7 +11,8 @@ COEF_QUARANTINE = 0.135
 DAY_QUARANTINE = 74
 INCUBATION_PERIOD = 15
 COVID_API_URL = 'http://localhost:3000/stats/'
-START_DATE = datetime.now() # date(2019, 4, 13)
+START_DATE = datetime(2020, 8, 10, 17, 24, 49, 243497)
+#datetime.now() # date(2019, 4, 13)
 
 np.random.seed(0)
 
