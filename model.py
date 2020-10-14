@@ -5,13 +5,13 @@ import sys
 from datetime import datetime, timedelta
 
 COUNTRY = "Ukraine"
-DAYS_OF_SIMULATION = 366
+DAYS_OF_SIMULATION = 100
 COEF_BASE = 0.35
 COEF_QUARANTINE = 0.135
 DAY_QUARANTINE = 74
 INCUBATION_PERIOD = 15
 COVID_API_URL = 'http://localhost:3000/stats/'
-START_DATE = datetime(2020, 8, 10, 17, 24, 49, 243497)
+START_DATE = datetime(2020, 7, 7, 17, 24, 49, 243497)
 #datetime.now() # date(2019, 4, 13)
 
 np.random.seed(0)
